@@ -1,4 +1,4 @@
-import tkinter
+'''import tkinter
 import os
 from tkinter import *
 from tkinter.messagebox import *
@@ -165,4 +165,243 @@ class Notepad:
 
 # run main application
 notepad = Notepad(width=600, height=400)
-notepad.run()
+notepad.run()'''
+
+#PROJECT 
+
+
+from tkinter import *
+import os
+import tkinter.filedialog
+import tkinter.messagebox
+
+root = Tk()
+root.iconbitmap('icons/favicon.ico')
+
+
+root.title("TEXT EDITOR")
+#file_name = NONE
+root.geometry('800x500')
+
+
+# all codes goes here
+
+
+# FILE MENU
+def new_file(event=None):
+    save_as()
+    root.title("Untitled")
+    #global file_name
+    #file_name = None
+    #content_text.delete(1.0, END)
+
+
+
+def open_file(event=None):
+    input_file_name = tkinter.filedialog.askopenfilename(defaultextension=".txt",
+                                                         filetypes=[("All Files", "*.*"), ("Text Documents", "*.txt"),
+                                                                    ("HTML", "*.html"), ("CSS", "*.css"),
+                                                                    ("JavaScript", "*.js")])
+
+
+
+
+
+
+
+def save_as(event=None):
+    input_file_name = tkinter.filedialog.asksaveasfilename(defaultextension=".txt",
+                                                           filetypes=[("All Files", "*.*"), ("Text Documents", "*.txt"),
+                                                                      ("HTML", "*.html"), ("CSS", "*.css"),
+                                                                      ("JavaScript", "*.js")])
+
+
+def save(event=None):
+   # global file_name
+   input_file_name = tkinter.filedialog.asksaveasfilename(defaultextension=".txt",
+                                                          filetypes=[("All Files", "*.*"), ("Text Documents", "*.txt"),
+                                                                     ("HTML", "*.html"), ("CSS", "*.css"),
+                                                                     ("JavaScript", "*.js")])
+
+# EDIT MENU
+def cut():
+    content_text.event_generate("<<Cut>>")
+
+
+
+
+def copy():
+    content_text.event_generate("<<Copy>>")
+
+
+
+def paste():
+    content_text.event_generate("<<Paste>>")
+
+
+
+def undo():
+    content_text.event_generate("<<Undo>>")
+
+
+
+def redo(event=None):
+    content_text.event_generate("<<Redo>>")
+
+
+
+def selectall(event=None):
+    content_text.tag_add('sel', '1.0', 'end')
+
+
+
+
+# about menu
+def display_about(event=None):
+    tkinter.messagebox.showinfo(
+        "About", PROGRAM_NAME + "\nA simple Text Editor made in Python with Tkinter\n -me")
+
+
+def display_help(event=None):
+    tkinter.messagebox.showinfo(
+        "Help", "This Text Editor works similar to any other editors.",
+        icon='question')
+
+
+def exit_editor(event=None):
+     if tkinter.messagebox.askokcancel("Exit", "Are you sure you want to Quit?"):
+            root.destroy()
+
+
+
+# adding Line Numbers Functionality
+def get_line_numbers():
+    output = ''
+    if show_line_number.get():
+        row, col = content_text.index("end").split('.')
+        for i in range(1, int(row)):
+            output += str(i) + '\n'
+    return output
+
+
+  #def on_content_changed(event=None):
+
+
+'''    def toggle_highlight(event=None):
+        if to_highlight_line.get():
+            highlight_line()
+        else:
+            undo_highlight()'''
+
+
+    # ICONS for the compound menu
+new_file_icon = PhotoImage(file='icons/new_file.gif')
+open_file_icon = PhotoImage(file='icons/open_file.gif')
+save_file_icon = PhotoImage(file='icons/save.gif')
+cut_icon = PhotoImage(file='icons/cut.gif')
+copy_icon = PhotoImage(file='icons/copy.gif')
+paste_icon = PhotoImage(file='icons/paste.gif')
+undo_icon = PhotoImage(file='icons/undo.gif')
+redo_icon = PhotoImage(file='icons/redo.gif')
+
+
+    # MENU CODES GOES HERE
+menu_bar = Menu(root)  # menu begins
+
+file_menu=Menu(menu_bar,tearoff=0)
+file_menu.add_command(label='New', accelerator='Ctrl+N', compound='left', image=new_file_icon, underline=0,
+                          command=new_file)
+file_menu.add_command(label='Open', accelerator='Ctrl+O', compound='left', image=open_file_icon, underline=0,
+                          command=open_file)
+file_menu.add_command(label="Save", accelerator='Ctrl+S', compound='left', image=save_file_icon, underline=0,
+                          command=save)
+file_menu.add_command(label="Save As", accelerator='Ctrl+Shift+S', compound='left', underline=0, command=save_as)
+file_menu.add_separator()
+file_menu.add_command(label="Exit", accelerator='Alt+F4', compound='left', underline=0, command=exit_editor)
+menu_bar.add_cascade(label='File', menu=file_menu)
+    # end of File Menu
+
+edit_menu = Menu(menu_bar, tearoff=0)
+edit_menu.add_command(label='Undo', accelerator='Ctrl + Z', compound='left', image=undo_icon, underline=0,
+                          command=undo)
+edit_menu.add_command(label='Redo', accelerator='Ctrl+Y', compound='left', image=redo_icon, underline=0,
+                          command=redo)
+edit_menu.add_separator()
+edit_menu.add_command(label='Cut', accelerator='Ctrl+X', compound='left', image=cut_icon, underline=0, command=cut)
+edit_menu.add_command(label='Copy', accelerator='Ctrl+C', compound='left', image=copy_icon, underline=0,
+                          command=copy)
+edit_menu.add_command(label='Paste', accelerator='Ctrl+V', compound='left', image=paste_icon, underline=0,
+                          command=paste)
+edit_menu.add_separator()
+edit_menu.add_separator()
+edit_menu.add_command(label='Select All', accelerator='Ctrl+A', compound='left', underline=0, command=selectall)
+menu_bar.add_cascade(label='Edit', menu=edit_menu)
+    # end of Edit Menu
+
+view_menu = Menu(menu_bar, tearoff=0)
+show_line_number = IntVar()
+show_line_number.set(1)
+view_menu.add_checkbutton(label="Show Line Number", variable=show_line_number)
+show_cursor_info = IntVar()
+show_cursor_info.set(1)
+
+
+
+menu_bar.add_cascade(label='View', menu=view_menu)
+
+    # start of About Menu
+about_menu = Menu(menu_bar, tearoff=0)
+menu_bar.add_cascade(label='About', menu=about_menu)
+about_menu.add_command(label='About', underline=0, command=display_about)
+about_menu.add_command(label='Help', underline=0, command=display_help)
+    # end of About Menu
+root.config(menu=menu_bar)
+
+    # adding top shortcut bar and left line number bar
+shortcut_bar = Frame(root, height=25)
+shortcut_bar.pack(expand='no', fill='x')
+
+    # adding shortcut icons
+icons = ('new_file', 'open_file', 'save', 'cut', 'copy', 'paste', 'undo', 'redo')
+for i, icon in enumerate(icons):
+        tool_bar_icon = PhotoImage(file='icons/{}.gif'.format(icon)).zoom(1, 1)
+        cmd = eval(icon)
+        tool_bar = Button(shortcut_bar, image=tool_bar_icon, height=35, width=35, command=cmd)
+        tool_bar.image = tool_bar_icon
+        tool_bar.pack(side='left')
+
+line_number_bar = Text(root, width=4, padx=3, takefocus=0, fg='white', border=0, background='#282828',
+                           state='disabled', wrap='none')
+line_number_bar.pack(side='left', fill='y')
+
+    # adding the main context Text widget and Scrollbar Widget
+content_text = Text(root, wrap='word')
+content_text.pack(expand='yes', fill='both')
+
+scroll_bar = Scrollbar(content_text)
+content_text.configure(yscrollcommand=scroll_bar.set)
+scroll_bar.config(command=content_text.yview)
+scroll_bar.pack(side='right', fill='y')
+
+    # addind cursor info label
+cursor_info_bar = Label(content_text, text='Line: 1 | Column: 1')
+cursor_info_bar.pack(expand='no', fill=None, side='right', anchor='se')
+
+
+    # handling binding
+
+content_text.bind('<Control-N>', new_file)
+content_text.bind('<Control-n>', new_file)
+content_text.bind('<Control-O>', open_file)
+content_text.bind('<Control-o>', open_file)
+content_text.bind('<Control-S>', save)
+content_text.bind('<Control-s>', save)
+content_text.bind('<Control-Y>',redo )
+content_text.bind('<Control-y>',redo )
+content_text.bind('<Control-A>',selectall )
+content_text.bind('<Control-a>',selectall )
+
+# end
+root.protocol('delete window',exit_editor)
+root.mainloop()
+
